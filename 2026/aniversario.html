@@ -14,12 +14,17 @@
             --color-carta: #fffaf0;
         }
 
+        * {
+            -webkit-tap-highlight-color: transparent; /* Elimina el recuadro azul al tocar en Android/iOS */
+        }
+
         body {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100dvh; /* Altura exacta del viewport en móviles */
             margin: 0;
             background: radial-gradient(circle, #fff5f5 0%, #f7d6da 100%);
             font-family: 'Lora', serif;
@@ -61,26 +66,22 @@
             50% { box-shadow: 0 8px 35px rgba(196, 43, 71, 0.35), 0 4px 15px rgba(0, 0, 0, 0.12); }
         }
 
-        /* Botón flotante de música */
+        /* Botón flotante de música en esquina inferior derecha para no tapar la carta */
         .btn-musica {
             position: fixed;
-            top: 16px;
+            bottom: 16px;
             right: 16px;
             z-index: 20;
             background: #fffaf0;
             border: 1px solid #d4af37;
             color: #821428;
             border-radius: 20px;
-            padding: 6px 14px;
+            padding: 7px 14px;
             font-family: 'Lora', serif;
             font-size: 0.8rem;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
             transition: transform 0.2s ease, background-color 0.2s ease;
-        }
-
-        .btn-musica:hover {
-            background: #fff0f2;
         }
 
         .btn-musica:active {
@@ -96,8 +97,7 @@
             box-shadow: 0 20px 40px rgba(130, 20, 40, 0.25);
             cursor: pointer;
             perspective: 1000px;
-            margin-top: 90px;
-            transition: transform 0.3s ease;
+            transition: transform 0.8s ease-in-out;
             z-index: 2;
         }
 
@@ -118,7 +118,7 @@
             height: 195px;
             background-color: var(--color-carta);
             border-radius: 8px;
-            padding: 20px 16px;
+            padding: 18px 16px;
             box-sizing: border-box;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
             border: 1px solid #f0e4d4;
@@ -133,7 +133,7 @@
         .carta h2 {
             margin: 0 0 10px 0;
             font-family: 'Dancing Script', cursive;
-            font-size: 1.75rem;
+            font-size: 1.65rem;
             color: var(--color-sobre-oscuro);
             text-align: center;
         }
@@ -200,6 +200,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
             border: 1px solid #eee;
             box-sizing: border-box;
+            user-select: none;
         }
 
         .polaroid img {
@@ -208,6 +209,7 @@
             object-fit: cover;
             display: block;
             border-radius: 2px;
+            pointer-events: none; /* Evita selección accidental al tocar la imagen */
         }
 
         .polaroid span {
@@ -375,6 +377,12 @@
         }
 
         /* --- ESTADOS CUANDO EL SOBRE ESTÁ ABIERTO --- */
+
+        /* Baja suavemente el sobre para dejar espacio arriba en pantallas de celular */
+        .contenedor-sobre.abierto {
+            transform: translateY(115px);
+        }
+
         .contenedor-sobre.abierto .sello-corazon,
         .contenedor-sobre.abierto .estampilla,
         .contenedor-sobre.abierto .destinatario {
@@ -391,22 +399,27 @@
             z-index: 1;
         }
 
+        /* La carta sube lo justo para quedar centrada sin tocar la barra del navegador */
         .contenedor-sobre.abierto .carta {
-            transform: translateY(-165px) scale(1.06);
-            height: 390px;
+            transform: translateY(-135px) scale(1.04);
+            height: 360px;
             z-index: 5;
             animation: brilloCarta 3s infinite ease-in-out;
             transition: transform 0.8s 0.4s ease-in-out, height 0.8s 0.4s ease-in-out, z-index 0.1s 0.4s;
         }
 
         .instruccion {
-            margin-top: 45px;
+            margin-top: 35px;
             color: #821428;
             font-size: 0.9rem;
             font-style: italic;
             opacity: 0.8;
             z-index: 2;
-            transition: opacity 0.3s;
+            transition: transform 0.8s ease-in-out, opacity 0.3s;
+        }
+
+        .contenedor-sobre.abierto + .instruccion {
+            transform: translateY(115px);
         }
     </style>
 </head>
@@ -576,14 +589,14 @@
 
     sobre.addEventListener('mouseleave', () => clearInterval(intervaloHover));
 
-    // Evitar cierre accidental al deslizar la carta o el carrusel en celular
     const carta = document.querySelector('.carta');
     let seMovio = false;
     carta.addEventListener('touchmove', () => { seMovio = true; });
     carta.addEventListener('touchstart', () => { seMovio = false; });
 
-    sobre.addEventListener('click', () => {
-        if (seMovio) return;
+    sobre.addEventListener('click', (e) => {
+        // Evita que tocar las fotos o el carrusel cierre la carta accidentalmente
+        if (seMovio || e.target.closest('.contenedor-carrusel')) return;
 
         sobre.classList.toggle('abierto');
         const estaAbierto = sobre.classList.contains('abierto');
@@ -592,7 +605,6 @@
             clearInterval(intervaloHover);
             textoGuia.textContent = 'Toca el texto de la carta para guardarla';
 
-            // Iniciar canción con entrada suave la primera vez que se abre
             if (!audioIniciado) {
                 audioIniciado = true;
                 musica.volume = 0.05;
@@ -606,7 +618,6 @@
                         }
                     }, 200);
                 }).catch(() => {
-                    // Si el navegador bloquea la reproducción, queda listo para activarse con el botón
                     audioIniciado = false;
                 });
             }
