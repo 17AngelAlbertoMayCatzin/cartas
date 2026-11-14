@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para ti ❤️</title>
+    <title>Feliz Aniversario ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -27,7 +27,6 @@
             position: relative;
         }
 
-        /* Contenedor de partículas animadas en toda la pantalla */
         #capa-particulas {
             position: fixed;
             inset: 0;
@@ -36,7 +35,6 @@
             overflow: hidden;
         }
 
-        /* Estilo de cada corazón/destello animado */
         .particula {
             position: absolute;
             user-select: none;
@@ -45,32 +43,50 @@
         }
 
         @keyframes flotarArriba {
-            0% {
-                opacity: 0;
-                transform: translate(0, 0) scale(0.5) rotate(0deg);
-            }
-            20% {
-                opacity: 1;
-            }
+            0% { opacity: 0; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+            20% { opacity: 1; }
             100% {
                 opacity: 0;
                 transform: translate(var(--desplazamiento-x, 0px), var(--desplazamiento-y, -180px)) scale(1.2) rotate(var(--rotacion, 25deg));
             }
         }
 
-        /* Latido del sello al pasar el mouse */
         @keyframes latido {
             0%, 100% { transform: translateX(-50%) scale(1); }
             50% { transform: translateX(-50%) scale(1.15); }
         }
 
-        /* Resplandor suave cuando la carta está abierta */
         @keyframes brilloCarta {
             0%, 100% { box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25), 0 4px 15px rgba(0, 0, 0, 0.12); }
             50% { box-shadow: 0 8px 35px rgba(196, 43, 71, 0.35), 0 4px 15px rgba(0, 0, 0, 0.12); }
         }
 
-        /* Contenedor principal con perspectiva 3D */
+        /* Botón flotante de música */
+        .btn-musica {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 20;
+            background: #fffaf0;
+            border: 1px solid #d4af37;
+            color: #821428;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-family: 'Lora', serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .btn-musica:hover {
+            background: #fff0f2;
+        }
+
+        .btn-musica:active {
+            transform: scale(0.95);
+        }
+
         .contenedor-sobre {
             position: relative;
             width: 320px;
@@ -80,7 +96,7 @@
             box-shadow: 0 20px 40px rgba(130, 20, 40, 0.25);
             cursor: pointer;
             perspective: 1000px;
-            margin-top: 60px;
+            margin-top: 90px;
             transition: transform 0.3s ease;
             z-index: 2;
         }
@@ -102,7 +118,7 @@
             height: 195px;
             background-color: var(--color-carta);
             border-radius: 8px;
-            padding: 22px 20px;
+            padding: 20px 16px;
             box-sizing: border-box;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
             border: 1px solid #f0e4d4;
@@ -111,27 +127,128 @@
             overflow-y: auto;
         }
 
-        .carta::-webkit-scrollbar {
-            width: 5px;
-        }
-        .carta::-webkit-scrollbar-thumb {
-            background: #e0c8c8;
-            border-radius: 10px;
-        }
+        .carta::-webkit-scrollbar { width: 5px; }
+        .carta::-webkit-scrollbar-thumb { background: #e0c8c8; border-radius: 10px; }
 
         .carta h2 {
-            margin: 0 0 12px 0;
+            margin: 0 0 10px 0;
             font-family: 'Dancing Script', cursive;
-            font-size: 1.8rem;
+            font-size: 1.75rem;
             color: var(--color-sobre-oscuro);
             text-align: center;
         }
 
         .carta p {
-            font-size: 0.92rem;
-            line-height: 1.6;
+            font-size: 0.9rem;
+            line-height: 1.55;
             color: #4a3b3b;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+        }
+
+        /* --- ESTILO PARA EL VERSO POÉTICO --- */
+        .verso {
+            margin: 16px 4px;
+            padding: 14px 10px;
+            border-top: 1px solid rgba(212, 175, 55, 0.55);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.55);
+            background: rgba(255, 240, 242, 0.45);
+            border-radius: 6px;
+            text-align: center;
+            font-style: italic;
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: var(--color-sobre-oscuro);
+        }
+
+        .verso p {
+            margin: 0 0 10px 0;
+            color: var(--color-sobre-oscuro);
+            font-size: 0.88rem;
+        }
+
+        .verso p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* --- ESTILOS DEL CARRUSEL POLAROID --- */
+        .contenedor-carrusel {
+            position: relative;
+            margin: 14px 0;
+        }
+
+        .carrusel-polaroid {
+            display: flex;
+            flex-direction: row;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            gap: 12px;
+            padding: 6px 18px 12px 18px;
+            scrollbar-width: none;
+        }
+
+        .carrusel-polaroid::-webkit-scrollbar {
+            display: none;
+        }
+
+        .polaroid {
+            flex: 0 0 86%;
+            scroll-snap-align: center;
+            background: #ffffff;
+            padding: 8px 8px 18px 8px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+            border: 1px solid #eee;
+            box-sizing: border-box;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 175px;
+            object-fit: cover;
+            display: block;
+            border-radius: 2px;
+        }
+
+        .polaroid span {
+            display: block;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.15rem;
+            color: #555;
+            margin-top: 8px;
+        }
+
+        .btn-carrusel {
+            position: absolute;
+            top: 44%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(130, 20, 40, 0.85);
+            color: #fffaf0;
+            border: 1px solid #d4af37;
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-carrusel:active { transform: translateY(-50%) scale(0.92); }
+        .btn-prev { left: -6px; }
+        .btn-next { right: -6px; }
+
+        .contador-fotos {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #821428;
+            font-style: italic;
+            margin-top: 2px;
         }
 
         .firma {
@@ -139,11 +256,11 @@
             font-size: 1.4rem;
             color: var(--color-sobre);
             text-align: right;
-            margin-top: 15px;
+            margin-top: 12px;
             margin-bottom: 0;
         }
 
-        /* Parte frontal del sobre */
+        /* Frente y solapa del sobre */
         .frente-sobre {
             position: absolute;
             inset: 0;
@@ -163,7 +280,6 @@
             border-radius: 0 0 12px 12px;
         }
 
-        /* Destinatario */
         .destinatario {
             position: absolute;
             bottom: 16px;
@@ -192,7 +308,6 @@
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
-        /* Solapa superior */
         .solapa {
             position: absolute;
             top: 0;
@@ -205,7 +320,6 @@
             transition: transform 0.6s ease-in-out, z-index 0.1s 0.3s;
         }
 
-        /* Estampilla postal */
         .estampilla {
             position: absolute;
             top: 12px;
@@ -225,12 +339,7 @@
             transition: opacity 0.3s ease;
         }
 
-        .estampilla-icono {
-            font-size: 18px;
-            color: var(--color-sobre);
-            line-height: 1;
-        }
-
+        .estampilla-icono { font-size: 18px; color: var(--color-sobre); line-height: 1; }
         .estampilla-texto {
             font-size: 0.5rem;
             font-weight: bold;
@@ -240,7 +349,6 @@
             text-transform: uppercase;
         }
 
-        /* Sello de lacre */
         .sello-corazon {
             position: absolute;
             top: 95px;
@@ -263,16 +371,19 @@
             color: #fffaf0;
             font-size: 22px;
             line-height: 1;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         /* --- ESTADOS CUANDO EL SOBRE ESTÁ ABIERTO --- */
-
         .contenedor-sobre.abierto .sello-corazon,
         .contenedor-sobre.abierto .estampilla,
         .contenedor-sobre.abierto .destinatario {
             opacity: 0;
             pointer-events: none;
+        }
+
+        .contenedor-sobre.abierto .sello-corazon {
+            transform: translateX(-50%) scale(0.7);
         }
 
         .contenedor-sobre.abierto .solapa {
@@ -281,8 +392,8 @@
         }
 
         .contenedor-sobre.abierto .carta {
-            transform: translateY(-130px) scale(1.05);
-            height: 310px;
+            transform: translateY(-165px) scale(1.06);
+            height: 390px;
             z-index: 5;
             animation: brilloCarta 3s infinite ease-in-out;
             transition: transform 0.8s 0.4s ease-in-out, height 0.8s 0.4s ease-in-out, z-index 0.1s 0.4s;
@@ -301,34 +412,76 @@
 </head>
 <body>
 
-<!-- Capa donde aparecerán los corazones animados -->
 <div id="capa-particulas"></div>
+
+<!-- Audio y botón de control -->
+<audio id="musica" src="audio/cien-anos.mp3" preload="auto" loop></audio>
+<button id="btnMusica" class="btn-musica" aria-label="Controlar música">🎵 Música: Off</button>
 
 <div class="contenedor-sobre" id="sobre">
     <div class="solapa"></div>
 
-    <!-- Estampilla postal -->
     <div class="estampilla">
         <span class="estampilla-icono">💌</span>
         <span class="estampilla-texto">14 NOV</span>
     </div>
 
-    <!-- Sello de lacre -->
     <div class="sello-corazon" title="Toca para abrir"></div>
 
     <!-- Contenido de la carta -->
     <div class="carta">
-        <h2>Para el amor de mi vida,</h2>
+        <h2>Feliz Aniversario, mi amor ❤️</h2>
         <p>
-            Quería escribirte estas líneas para recordarte lo mucho que significas para mí. Cada día a tu lado se convierte en mi momento favorito, y no hay nada que disfrute más que compartir mi tiempo contigo.
+            Hoy celebramos un año lleno de momentos inolvidables a tu lado. Quise reunir estos 12 recuerdos para recordarte lo feliz que me haces cada mes del año.
         </p>
+
+        <!-- CARRUSEL DE 12 FOTOS -->
+        <div class="contenedor-carrusel">
+            <button class="btn-carrusel btn-prev" id="btnPrev" aria-label="Anterior">‹</button>
+
+            <div class="carrusel-polaroid" id="carrusel">
+                <div class="polaroid"><img src="img/foto5.jpg" alt="Mes 1"><span>Nuestro comienzo ❤️</span></div>
+                <div class="polaroid"><img src="img/foto13.jpg" alt="Mes 2"><span>2. Risas juntos ✨</span></div>
+                <div class="polaroid"><img src="img/foto2.jpg" alt="Mes 3"><span>3. Momentos mágicos 💕</span></div>
+                <div class="polaroid"><img src="img/foto4.jpg" alt="Mes 4"><span>4. Contigo todo es mejor 🌸</span></div>
+                <div class="polaroid"><img src="img/foto3.jpg" alt="Mes 5"><span>5. Aventuras juntos 🗺️</span></div>
+                <div class="polaroid"><img src="img/foto6.jpg" alt="Mes 6"><span>6. Medio año a tu lado 💖</span></div>
+                <div class="polaroid"><img src="img/foto7.jpg" alt="Mes 7"><span>7. Mi lugar favorito 🥰</span></div>
+                <div class="polaroid"><img src="img/foto8.jpg" alt="Mes 8"><span>8. Cada día te amo más 💌</span></div>
+                <div class="polaroid"><img src="img/foto9.jpg" alt="Mes 9"><span>9. Inolvidable ✨</span></div>
+                <div class="polaroid"><img src="img/foto10.jpg" alt="Mes 10"><span>10. Mi persona favorita ❤️</span></div>
+                <div class="polaroid"><img src="img/foto11.jpg" alt="Mes 11"><span>11. Casi un año 💕</span></div>
+                <div class="polaroid"><img src="img/foto12.jpg" alt="Mes 12"><span>12. ¡Feliz aniversario! 🥂</span></div>
+            </div>
+
+            <button class="btn-carrusel btn-next" id="btnNext" aria-label="Siguiente">›</button>
+            <div class="contador-fotos" id="contador">Foto 1 de 12 (desliza →)</div>
+        </div>
+
+        <!-- VERSO POÉTICO -->
+        <div class="verso">
+            <p>
+                Tienes ojos bellos que ya no sé<br>
+                si son destellos o reflejos los que veo,<br>
+                me gustaría perderme en esos abismos maravillosos.
+            </p>
+            <p>
+                Eres esa gravedad lunar<br>
+                que hace palpitar mi corazón sin cesar.
+            </p>
+            <p>
+                Verte pasar es como ver una estrella fugaz cruzar;<br>
+                no sé navegar,<br>
+                pero aprendería a nadar entre constelaciones por verte. ✨
+            </p>
+        </div>
+
         <p>
-            Gracias por tu sonrisa, por tu apoyo y por hacer que todo sea más bonito simplemente con estar ahí. Eres lo mejor que me ha pasado.
+            Gracias por tu sonrisa, por tu apoyo y por hacer que cada día valga la pena. Vamos por muchos años más juntos.
         </p>
         <p class="firma">Con todo mi amor ❤️</p>
     </div>
 
-    <!-- Frente del sobre y destinatario -->
     <div class="frente-sobre"></div>
     <div class="destinatario">
         <span>Para:</span>
@@ -342,11 +495,48 @@
     const sobre = document.getElementById('sobre');
     const textoGuia = document.getElementById('texto-guia');
     const capaParticulas = document.getElementById('capa-particulas');
+    const carrusel = document.getElementById('carrusel');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const contador = document.getElementById('contador');
+    const musica = document.getElementById('musica');
+    const btnMusica = document.getElementById('btnMusica');
 
     let intervaloHover = null;
     let intervaloAbierto = null;
+    let audioIniciado = false;
 
-    // Función para crear un corazón o destello flotante
+    // --- LÓGICA DE MÚSICA ---
+    btnMusica.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (musica.paused) {
+            musica.play();
+            btnMusica.textContent = '🎵 Música: On';
+        } else {
+            musica.pause();
+            btnMusica.textContent = '🎵 Música: Off';
+        }
+    });
+
+    // --- LÓGICA DEL CARRUSEL ---
+    btnPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        carrusel.scrollBy({ left: -220, behavior: 'smooth' });
+    });
+
+    btnNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        carrusel.scrollBy({ left: 220, behavior: 'smooth' });
+    });
+
+    carrusel.addEventListener('scroll', () => {
+        const anchoTarjeta = carrusel.querySelector('.polaroid').offsetWidth + 12;
+        const indiceActual = Math.round(carrusel.scrollLeft / anchoTarjeta) + 1;
+        const total = carrusel.querySelectorAll('.polaroid').length;
+        contador.textContent = `Foto ${Math.min(indiceActual, total)} de ${total}`;
+    });
+
+    // --- LÓGICA DE CORAZONES Y APERTURA ---
     function crearParticula(x, y, esFondo = false) {
         const particula = document.createElement('span');
         particula.classList.add('particula');
@@ -369,39 +559,58 @@
         particula.style.setProperty('--rotacion', `${rotacion}deg`);
 
         capaParticulas.appendChild(particula);
-
-        // Eliminar el elemento al terminar la animación para no saturar memoria
-        setTimeout(() => {
-            particula.remove();
-        }, duracion * 1000);
+        setTimeout(() => particula.remove(), duracion * 1000);
     }
 
-    // 1. Corazoncitos al pasar el cursor sobre el sobre cerrado
     sobre.addEventListener('mouseenter', () => {
         if (sobre.classList.contains('abierto')) return;
-
         intervaloHover = setInterval(() => {
             const rect = sobre.getBoundingClientRect();
-            const x = rect.left + Math.random() * rect.width;
-            const y = rect.top + rect.height * 0.4;
-            crearParticula(x, y, false);
+            crearParticula(
+                rect.left + Math.random() * rect.width,
+                rect.top + rect.height * 0.4,
+                false
+            );
         }, 280);
     });
 
-    sobre.addEventListener('mouseleave', () => {
-        clearInterval(intervaloHover);
-    });
+    sobre.addEventListener('mouseleave', () => clearInterval(intervaloHover));
 
-    // 2. Abrir / Cerrar carta y activar animación continua al abrir
+    // Evitar cierre accidental al deslizar la carta o el carrusel en celular
+    const carta = document.querySelector('.carta');
+    let seMovio = false;
+    carta.addEventListener('touchmove', () => { seMovio = true; });
+    carta.addEventListener('touchstart', () => { seMovio = false; });
+
     sobre.addEventListener('click', () => {
+        if (seMovio) return;
+
         sobre.classList.toggle('abierto');
         const estaAbierto = sobre.classList.contains('abierto');
 
         if (estaAbierto) {
             clearInterval(intervaloHover);
-            textoGuia.textContent = 'Toca la carta para guardarla';
+            textoGuia.textContent = 'Toca el texto de la carta para guardarla';
 
-            // Explosión inicial de corazones al abrir
+            // Iniciar canción con entrada suave la primera vez que se abre
+            if (!audioIniciado) {
+                audioIniciado = true;
+                musica.volume = 0.05;
+                musica.play().then(() => {
+                    btnMusica.textContent = '🎵 Música: On';
+                    const fadeAudio = setInterval(() => {
+                        if (musica.volume < 0.5) {
+                            musica.volume = Math.min(0.5, musica.volume + 0.05);
+                        } else {
+                            clearInterval(fadeAudio);
+                        }
+                    }, 200);
+                }).catch(() => {
+                    // Si el navegador bloquea la reproducción, queda listo para activarse con el botón
+                    audioIniciado = false;
+                });
+            }
+
             const rect = sobre.getBoundingClientRect();
             for (let i = 0; i < 14; i++) {
                 setTimeout(() => {
@@ -413,11 +622,8 @@
                 }, i * 60);
             }
 
-            // Lluvia suave continua mientras la carta está abierta
             intervaloAbierto = setInterval(() => {
-                const x = Math.random() * window.innerWidth;
-                const y = window.innerHeight + 10;
-                crearParticula(x, y, true);
+                crearParticula(Math.random() * window.innerWidth, window.innerHeight + 10, true);
             }, 450);
 
         } else {
