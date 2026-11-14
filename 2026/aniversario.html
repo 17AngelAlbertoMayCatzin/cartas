@@ -246,7 +246,7 @@
         }
 
         /* Control de visibilidad de las poses de brazos */
-        .pose-saludo, .pose-reposo, .pose-microfono, .pose-corazon, .pose-beso, .pose-cartel, .pose-reverencia {
+        .pose-saludo, .pose-reposo, .pose-microfono, .pose-corazon, .pose-beso, .pose-cartel, .pose-reverencia, .pose-arrodillado {
             opacity: 0;
             transition: opacity 0.35s ease;
         }
@@ -258,6 +258,7 @@
         .jack-contenedor.mandando-beso .pose-beso { opacity: 1; }
         .jack-contenedor.mostrando-cartel .pose-cartel { opacity: 1; }
         .jack-contenedor.haciendo-reverencia .pose-reverencia { opacity: 1; }
+        .jack-contenedor.arrodillado .pose-arrodillado { opacity: 1; }
 
         /* --- TRANSICIÓN NATURAL AL SACAR EL MICRÓFONO --- */
         .pose-microfono {
@@ -270,14 +271,14 @@
             transform: translateY(0) rotate(0deg);
         }
 
-        /* --- CARTEL GIRATORIO 3D EN LAS MANOS DE JACK --- */
+        /* --- CARTEL GIRATORIO 3D CON MARCO DE LUCES DESTELLANTES --- */
         .cartel-jack-wrapper {
             position: absolute;
-            top: 48px;
+            top: 44px;
             left: 50%;
             transform: translateX(-50%) scale(0.7);
-            width: 134px;
-            height: 44px;
+            width: 146px;
+            height: 50px;
             perspective: 600px;
             opacity: 0;
             pointer-events: none;
@@ -307,22 +308,24 @@
             inset: 0;
             backface-visibility: hidden;
             background: #fffaf0;
-            border: 2px solid #d4af37;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+            border: 3px solid #821428;
+            outline: 1.5px solid #d4af37;
+            border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3), 0 0 12px rgba(212, 175, 55, 0.45);
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 2px 6px;
+            padding: 4px 10px;
             font-family: 'Dancing Script', cursive;
             font-weight: 700;
             color: #821428;
+            overflow: hidden;
         }
 
         .cartel-frente {
             font-size: 1.05rem;
-            line-height: 1.1;
+            line-height: 1.05;
         }
 
         .cartel-reverso {
@@ -332,6 +335,56 @@
             color: #a82039;
         }
 
+        /* Luces destellantes alrededor del marco */
+        .marco-luces {
+            position: absolute;
+            inset: 1px;
+            pointer-events: none;
+        }
+
+        .luz-cartel {
+            position: absolute;
+            width: 4.5px;
+            height: 4.5px;
+            border-radius: 50%;
+            background: #fff8cc;
+            box-shadow: 0 0 5px 1.5px #ffd700, 0 0 8px #ffaa00;
+            animation: destelloMarquesina 0.7s infinite alternate ease-in-out;
+        }
+
+        .luz-cartel:nth-child(even) {
+            animation-delay: 0.35s;
+        }
+
+        @keyframes destelloMarquesina {
+            0% {
+                opacity: 0.3;
+                transform: scale(0.75);
+                box-shadow: 0 0 2px #d4af37;
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.25);
+                box-shadow: 0 0 6px 2px #fff3b0, 0 0 10px #ffd700;
+            }
+        }
+
+        /* Posiciones de los 14 foquitos alrededor del borde */
+        .l-1  { top: 1px; left: 6px; }
+        .l-2  { top: 1px; left: 32px; }
+        .l-3  { top: 1px; left: 58px; }
+        .l-4  { top: 1px; left: 84px; }
+        .l-5  { top: 1px; left: 110px; }
+        .l-6  { top: 1px; right: 6px; }
+        .l-7  { bottom: 1px; left: 6px; }
+        .l-8  { bottom: 1px; left: 32px; }
+        .l-9  { bottom: 1px; left: 58px; }
+        .l-10 { bottom: 1px; left: 84px; }
+        .l-11 { bottom: 1px; left: 110px; }
+        .l-12 { bottom: 1px; right: 6px; }
+        .l-13 { top: 50%; left: 1.5px; transform: translateY(-50%); }
+        .l-14 { top: 50%; right: 1.5px; transform: translateY(-50%); }
+
         /* --- REVERENCIA (Bienvenida al centro y despedida final) --- */
         .jack-torso-superior {
             transition: transform 0.7s ease-in-out;
@@ -340,6 +393,51 @@
 
         .jack-contenedor.haciendo-reverencia .jack-torso-superior {
             transform: rotate(34deg) translateY(4px);
+        }
+
+        /* --- ARRODILLADO ENTREGANDO RAMO DE FLORES AL FINAL --- */
+        .jack-cuerpo-completo {
+            transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .jack-contenedor.arrodillado .jack-cuerpo-completo {
+            transform: translateY(28px);
+        }
+
+        .jack-pierna-izq, .jack-pierna-der, .jack-pantorrilla-izq, .jack-pantorrilla-der {
+            transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .jack-contenedor.arrodillado .jack-pierna-izq {
+            transform: rotate(-78deg);
+            transform-origin: 43px 88px;
+        }
+
+        .jack-contenedor.arrodillado .jack-pantorrilla-izq {
+            transform: rotate(78deg);
+            transform-origin: 42px 120px;
+        }
+
+        .jack-contenedor.arrodillado .jack-pierna-der {
+            transform: rotate(-45deg);
+            transform-origin: 57px 88px;
+        }
+
+        .jack-contenedor.arrodillado .jack-pantorrilla-der {
+            transform: rotate(45deg);
+            transform-origin: 58px 120px;
+        }
+
+        .ramo-flores-grupo {
+            transform: translate(-22px, 10px) rotate(-35deg) scale(0.5);
+            transform-origin: 65px 66px;
+            opacity: 0;
+            transition: transform 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s, opacity 0.4s ease 0.3s;
+        }
+
+        .jack-contenedor.arrodillado .ramo-flores-grupo {
+            transform: translate(0px, 0px) rotate(0deg) scale(1);
+            opacity: 1;
         }
 
         /* Latido del corazón que forma con sus manos */
@@ -424,7 +522,8 @@
         .jack-contenedor.entrando .jack-cabeza,
         .jack-contenedor.preparando .jack-cabeza,
         .jack-contenedor.haciendo-corazon .jack-cabeza,
-        .jack-contenedor.mostrando-cartel .jack-cabeza {
+        .jack-contenedor.mostrando-cartel .jack-cabeza,
+        .jack-contenedor.arrodillado .jack-cabeza {
             transform: rotate(4deg);
             transform-origin: 50px 52px;
             transition: transform 0.5s ease;
@@ -851,28 +950,58 @@
     <span class="nota-musical nota-1">♪</span>
     <span class="nota-musical nota-2">♫</span>
 
-    <!-- Cartel giratorio 3D (Feliz Aniversario / Te Amo) -->
+    <!-- Cartel giratorio 3D con marco de luces destellantes (Feliz Aniversario / Te Amo) -->
     <div class="cartel-jack-wrapper" id="cartelJack">
         <div class="cartel-jack-inner">
-            <div class="cartel-cara cartel-frente">¡Feliz Aniversario!</div>
-            <div class="cartel-cara cartel-reverso">¡Te Amo! ❤️</div>
+            <div class="cartel-cara cartel-frente">
+                <div class="marco-luces">
+                    <span class="luz-cartel l-1"></span><span class="luz-cartel l-2"></span>
+                    <span class="luz-cartel l-3"></span><span class="luz-cartel l-4"></span>
+                    <span class="luz-cartel l-5"></span><span class="luz-cartel l-6"></span>
+                    <span class="luz-cartel l-7"></span><span class="luz-cartel l-8"></span>
+                    <span class="luz-cartel l-9"></span><span class="luz-cartel l-10"></span>
+                    <span class="luz-cartel l-11"></span><span class="luz-cartel l-12"></span>
+                    <span class="luz-cartel l-13"></span><span class="luz-cartel l-14"></span>
+                </div>
+                ¡Feliz Aniversario!
+            </div>
+            <div class="cartel-cara cartel-reverso">
+                <div class="marco-luces">
+                    <span class="luz-cartel l-1"></span><span class="luz-cartel l-2"></span>
+                    <span class="luz-cartel l-3"></span><span class="luz-cartel l-4"></span>
+                    <span class="luz-cartel l-5"></span><span class="luz-cartel l-6"></span>
+                    <span class="luz-cartel l-7"></span><span class="luz-cartel l-8"></span>
+                    <span class="luz-cartel l-9"></span><span class="luz-cartel l-10"></span>
+                    <span class="luz-cartel l-11"></span><span class="luz-cartel l-12"></span>
+                    <span class="luz-cartel l-13"></span><span class="luz-cartel l-14"></span>
+                </div>
+                ¡Te Amo! ❤️
+            </div>
         </div>
     </div>
 
     <svg viewBox="0 0 115 165" width="100%" height="100%">
         <g class="jack-cuerpo-completo">
-            <!-- Pierna izquierda -->
+            <!-- Pierna izquierda articulada -->
             <g class="jack-pierna-izq">
-                <line x1="43" y1="88" x2="41" y2="152" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round" />
-                <line x1="43" y1="88" x2="41" y2="152" stroke="#ffffff" stroke-width="0.9" stroke-dasharray="3,3" />
-                <path d="M38,152 L50,152 Q53,156 48,158 L37,158 Z" fill="#111" />
+                <line x1="43" y1="88" x2="42" y2="120" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round" />
+                <line x1="43" y1="88" x2="42" y2="120" stroke="#ffffff" stroke-width="0.9" stroke-dasharray="3,3" />
+                <g class="jack-pantorrilla-izq">
+                    <line x1="42" y1="120" x2="41" y2="152" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round" />
+                    <line x1="42" y1="120" x2="41" y2="152" stroke="#ffffff" stroke-width="0.9" stroke-dasharray="3,3" />
+                    <path d="M38,152 L50,152 Q53,156 48,158 L37,158 Z" fill="#111" />
+                </g>
             </g>
 
-            <!-- Pierna derecha -->
+            <!-- Pierna derecha articulada -->
             <g class="jack-pierna-der">
-                <line x1="57" y1="88" x2="59" y2="152" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round" />
-                <line x1="57" y1="88" x2="59" y2="152" stroke="#ffffff" stroke-width="0.9" stroke-dasharray="3,3" />
-                <path d="M54,152 L66,152 Q69,156 64,158 L53,158 Z" fill="#111" />
+                <line x1="57" y1="88" x2="58" y2="120" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round" />
+                <line x1="57" y1="88" x2="58" y2="120" stroke="#ffffff" stroke-width="0.9" stroke-dasharray="3,3" />
+                <g class="jack-pantorrilla-der">
+                    <line x1="58" y1="120" x2="59" y2="152" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round" />
+                    <line x1="58" y1="120" x2="59" y2="152" stroke="#ffffff" stroke-width="0.9" stroke-dasharray="3,3" />
+                    <path d="M54,152 L66,152 Q69,156 64,158 L53,158 Z" fill="#111" />
+                </g>
             </g>
 
             <!-- Torso superior que se inclina en las reverencias -->
@@ -1000,6 +1129,33 @@
                     <path d="M65,66 Q80,75 88,68" fill="none" stroke="#ffffff" stroke-width="0.8" stroke-dasharray="3,2" />
                     <circle cx="89" cy="67" r="2.5" fill="#fffaf0" stroke="#222" stroke-width="0.8" />
                 </g>
+
+                <!-- POSE 7: Arrodillado entregando ramo de flores -->
+                <g class="pose-arrodillado">
+                    <!-- Brazo izquierdo detrás de la espalda -->
+                    <path d="M35,66 Q24,78 36,86" fill="none" stroke="#1a1a1a" stroke-width="4.5" stroke-linecap="round" />
+                    <path d="M35,66 Q24,78 36,86" fill="none" stroke="#ffffff" stroke-width="0.8" stroke-dasharray="3,2" />
+
+                    <!-- Brazo derecho y ramo de rosas saliendo desde la espalda -->
+                    <g class="ramo-flores-grupo">
+                        <path d="M65,66 L84,72 L92,64" fill="none" stroke="#1a1a1a" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M65,66 L84,72 L92,64" fill="none" stroke="#ffffff" stroke-width="0.9" stroke-dasharray="3,2" />
+
+                        <!-- Cono de papel vintage del ramo -->
+                        <polygon points="88,69 108,52 98,44" fill="#f5e6d3" stroke="#d4af37" stroke-width="1" />
+                        <!-- Listón rojo -->
+                        <circle cx="92" cy="63" r="2.2" fill="#a82039" />
+                        <!-- Hojas verdes -->
+                        <ellipse cx="97" cy="46" rx="4" ry="2" transform="rotate(-30 97 46)" fill="#2d6a4f" />
+                        <ellipse cx="107" cy="54" rx="4" ry="2" transform="rotate(25 107 54)" fill="#2d6a4f" />
+                        <!-- Rosas rojas -->
+                        <circle cx="100" cy="45" r="3.8" fill="#d90429" stroke="#821428" stroke-width="0.6" />
+                        <circle cx="105" cy="48" r="3.8" fill="#ef233c" stroke="#821428" stroke-width="0.6" />
+                        <circle cx="101" cy="51" r="3.8" fill="#a82039" stroke="#590d1b" stroke-width="0.6" />
+                        <!-- Mano huesuda sujetando el ramo -->
+                        <circle cx="92" cy="64" r="2.8" fill="#fffaf0" stroke="#222" stroke-width="0.8" />
+                    </g>
+                </g>
             </g>
         </g>
     </svg>
@@ -1109,7 +1265,8 @@
             'haciendo-corazon',
             'mandando-beso',
             'mostrando-cartel',
-            'haciendo-reverencia'
+            'haciendo-reverencia',
+            'arrodillado'
         );
     }
 
@@ -1168,7 +1325,7 @@
                 jackCantando.style.transform = `translate(${jackX}px, 0px) scaleX(1)`;
             }
         }
-        // FASE 2: Final de la canción -> Camina al centro, muestra cartel giratorio y hace reverencia
+        // FASE 2: Final de la canción -> Camina al centro, muestra cartel luminoso, hace reverencia y al terminar se arrodilla con flores
         else if (musica.ended || (duracion && t >= duracion - 14)) {
             jackY = 0;
             const distCentro = centroX - jackX;
@@ -1183,7 +1340,10 @@
                 jackX = centroX;
                 jackCantando.style.transform = `translate(${jackX}px, 0px) scaleX(1)`;
 
-                if (musica.ended || t >= duracion - 4) {
+                if (musica.ended) {
+                    cartelJack.classList.remove('volteado');
+                    jackCantando.classList.add('arrodillado');
+                } else if (t >= duracion - 4) {
                     cartelJack.classList.remove('volteado');
                     jackCantando.classList.add('haciendo-reverencia');
                 } else {
@@ -1247,7 +1407,8 @@
             jackCantando.classList.contains('haciendo-reverencia') ||
             jackCantando.classList.contains('haciendo-corazon') ||
             jackCantando.classList.contains('mandando-beso') ||
-            jackCantando.classList.contains('mostrando-cartel');
+            jackCantando.classList.contains('mostrando-cartel') ||
+            jackCantando.classList.contains('arrodillado');
 
         reflectorEscenario.classList.toggle('momento-clave', esMomentoClave);
 
