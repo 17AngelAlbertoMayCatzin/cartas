@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para ti ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-sobre: #a82039;
+            --color-sobre-oscuro: #821428;
+            --color-solapa: #c42b47;
+            --color-sello: #d4af37;
+            --color-carta: #fffaf0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: radial-gradient(circle, #fff5f5 0%, #f7d6da 100%);
+            font-family: 'Lora', serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Contenedor de partículas animadas en toda la pantalla */
+        #capa-particulas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        /* Estilo de cada corazón/destello animado */
+        .particula {
+            position: absolute;
+            user-select: none;
+            pointer-events: none;
+            animation: flotarArriba var(--duracion, 2.5s) ease-out forwards;
+        }
+
+        @keyframes flotarArriba {
+            0% {
+                opacity: 0;
+                transform: translate(0, 0) scale(0.5) rotate(0deg);
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--desplazamiento-x, 0px), var(--desplazamiento-y, -180px)) scale(1.2) rotate(var(--rotacion, 25deg));
+            }
+        }
+
+        /* Latido del sello al pasar el mouse */
+        @keyframes latido {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.15); }
+        }
+
+        /* Resplandor suave cuando la carta está abierta */
+        @keyframes brilloCarta {
+            0%, 100% { box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25), 0 4px 15px rgba(0, 0, 0, 0.12); }
+            50% { box-shadow: 0 8px 35px rgba(196, 43, 71, 0.35), 0 4px 15px rgba(0, 0, 0, 0.12); }
+        }
+
+        /* Contenedor principal con perspectiva 3D */
+        .contenedor-sobre {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            background-color: var(--color-sobre-oscuro);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 20px 40px rgba(130, 20, 40, 0.25);
+            cursor: pointer;
+            perspective: 1000px;
+            margin-top: 60px;
+            transition: transform 0.3s ease;
+            z-index: 2;
+        }
+
+        .contenedor-sobre:not(.abierto):hover {
+            transform: translateY(-6px);
+        }
+
+        .contenedor-sobre:not(.abierto):hover .sello-corazon {
+            animation: latido 0.8s infinite ease-in-out;
+        }
+
+        /* La carta interior */
+        .carta {
+            position: absolute;
+            bottom: 12px;
+            left: 15px;
+            width: 290px;
+            height: 195px;
+            background-color: var(--color-carta);
+            border-radius: 8px;
+            padding: 22px 20px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+            border: 1px solid #f0e4d4;
+            z-index: 2;
+            transition: transform 0.8s ease-in-out, height 0.8s ease-in-out, z-index 0.1s 0.4s;
+            overflow-y: auto;
+        }
+
+        .carta::-webkit-scrollbar {
+            width: 5px;
+        }
+        .carta::-webkit-scrollbar-thumb {
+            background: #e0c8c8;
+            border-radius: 10px;
+        }
+
+        .carta h2 {
+            margin: 0 0 12px 0;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--color-sobre-oscuro);
+            text-align: center;
+        }
+
+        .carta p {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: #4a3b3b;
+            margin-bottom: 12px;
+        }
+
+        .firma {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.4rem;
+            color: var(--color-sobre);
+            text-align: right;
+            margin-top: 15px;
+            margin-bottom: 0;
+        }
+
+        /* Parte frontal del sobre */
+        .frente-sobre {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .frente-sobre::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-left: 160px solid var(--color-sobre);
+            border-right: 160px solid var(--color-sobre);
+            border-top: 110px solid transparent;
+            border-bottom: 110px solid var(--color-sobre-oscuro);
+            border-radius: 0 0 12px 12px;
+        }
+
+        /* Destinatario */
+        .destinatario {
+            position: absolute;
+            bottom: 16px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 4;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .destinatario span {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 250, 240, 0.75);
+            margin-bottom: 2px;
+        }
+
+        .destinatario strong {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.45rem;
+            color: #fffaf0;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Solapa superior */
+        .solapa {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 125px solid var(--color-solapa);
+            transform-origin: top;
+            z-index: 4;
+            transition: transform 0.6s ease-in-out, z-index 0.1s 0.3s;
+        }
+
+        /* Estampilla postal */
+        .estampilla {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            width: 44px;
+            height: 52px;
+            background-color: #fffaf0;
+            border: 2px dashed var(--color-sobre-oscuro);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: rotate(4deg);
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .estampilla-icono {
+            font-size: 18px;
+            color: var(--color-sobre);
+            line-height: 1;
+        }
+
+        .estampilla-texto {
+            font-size: 0.5rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            color: #821428;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Sello de lacre */
+        .sello-corazon {
+            position: absolute;
+            top: 95px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: 48px;
+            background-color: var(--color-sello);
+            border-radius: 50%;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 0 0 3px rgba(255, 255, 255, 0.25);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .sello-corazon::after {
+            content: '❤';
+            color: #fffaf0;
+            font-size: 22px;
+            line-height: 1;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* --- ESTADOS CUANDO EL SOBRE ESTÁ ABIERTO --- */
+
+        .contenedor-sobre.abierto .sello-corazon,
+        .contenedor-sobre.abierto .estampilla,
+        .contenedor-sobre.abierto .destinatario {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .contenedor-sobre.abierto .solapa {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .contenedor-sobre.abierto .carta {
+            transform: translateY(-130px) scale(1.05);
+            height: 310px;
+            z-index: 5;
+            animation: brilloCarta 3s infinite ease-in-out;
+            transition: transform 0.8s 0.4s ease-in-out, height 0.8s 0.4s ease-in-out, z-index 0.1s 0.4s;
+        }
+
+        .instruccion {
+            margin-top: 45px;
+            color: #821428;
+            font-size: 0.9rem;
+            font-style: italic;
+            opacity: 0.8;
+            z-index: 2;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Capa donde aparecerán los corazones animados -->
+<div id="capa-particulas"></div>
+
+<div class="contenedor-sobre" id="sobre">
+    <div class="solapa"></div>
+
+    <!-- Estampilla postal -->
+    <div class="estampilla">
+        <span class="estampilla-icono">💌</span>
+        <span class="estampilla-texto">14 NOV</span>
+    </div>
+
+    <!-- Sello de lacre -->
+    <div class="sello-corazon" title="Toca para abrir"></div>
+
+    <!-- Contenido de la carta -->
+    <div class="carta">
+        <h2>Para el amor de mi vida,</h2>
+        <p>
+            Quería escribirte estas líneas para recordarte lo mucho que significas para mí. Cada día a tu lado se convierte en mi momento favorito, y no hay nada que disfrute más que compartir mi tiempo contigo.
+        </p>
+        <p>
+            Gracias por tu sonrisa, por tu apoyo y por hacer que todo sea más bonito simplemente con estar ahí. Eres lo mejor que me ha pasado.
+        </p>
+        <p class="firma">Con todo mi amor ❤️</p>
+    </div>
+
+    <!-- Frente del sobre y destinatario -->
+    <div class="frente-sobre"></div>
+    <div class="destinatario">
+        <span>Para:</span>
+        <strong>El amor de mi vida</strong>
+    </div>
+</div>
+
+<div class="instruccion" id="texto-guia">Toca el sello de corazón para abrir</div>
+
+<script>
+    const sobre = document.getElementById('sobre');
+    const textoGuia = document.getElementById('texto-guia');
+    const capaParticulas = document.getElementById('capa-particulas');
+
+    let intervaloHover = null;
+    let intervaloAbierto = null;
+
+    // Función para crear un corazón o destello flotante
+    function crearParticula(x, y, esFondo = false) {
+        const particula = document.createElement('span');
+        particula.classList.add('particula');
+
+        const iconos = esFondo ? ['❤️', '💖', '✨', '💕', '🌸'] : ['❤️', '💕', '💗', '✨'];
+        particula.textContent = iconos[Math.floor(Math.random() * iconos.length)];
+
+        const tamano = esFondo ? (Math.random() * 14 + 12) : (Math.random() * 10 + 12);
+        const duracion = esFondo ? (Math.random() * 2.5 + 3) : (Math.random() * 1 + 1.5);
+        const desplX = (Math.random() - 0.5) * (esFondo ? 160 : 120);
+        const desplY = esFondo ? -(window.innerHeight * 0.65) : -(Math.random() * 90 + 80);
+        const rotacion = (Math.random() - 0.5) * 60;
+
+        particula.style.left = `${x}px`;
+        particula.style.top = `${y}px`;
+        particula.style.fontSize = `${tamano}px`;
+        particula.style.setProperty('--duracion', `${duracion}s`);
+        particula.style.setProperty('--desplazamiento-x', `${desplX}px`);
+        particula.style.setProperty('--desplazamiento-y', `${desplY}px`);
+        particula.style.setProperty('--rotacion', `${rotacion}deg`);
+
+        capaParticulas.appendChild(particula);
+
+        // Eliminar el elemento al terminar la animación para no saturar memoria
+        setTimeout(() => {
+            particula.remove();
+        }, duracion * 1000);
+    }
+
+    // 1. Corazoncitos al pasar el cursor sobre el sobre cerrado
+    sobre.addEventListener('mouseenter', () => {
+        if (sobre.classList.contains('abierto')) return;
+
+        intervaloHover = setInterval(() => {
+            const rect = sobre.getBoundingClientRect();
+            const x = rect.left + Math.random() * rect.width;
+            const y = rect.top + rect.height * 0.4;
+            crearParticula(x, y, false);
+        }, 280);
+    });
+
+    sobre.addEventListener('mouseleave', () => {
+        clearInterval(intervaloHover);
+    });
+
+    // 2. Abrir / Cerrar carta y activar animación continua al abrir
+    sobre.addEventListener('click', () => {
+        sobre.classList.toggle('abierto');
+        const estaAbierto = sobre.classList.contains('abierto');
+
+        if (estaAbierto) {
+            clearInterval(intervaloHover);
+            textoGuia.textContent = 'Toca la carta para guardarla';
+
+            // Explosión inicial de corazones al abrir
+            const rect = sobre.getBoundingClientRect();
+            for (let i = 0; i < 14; i++) {
+                setTimeout(() => {
+                    crearParticula(
+                        rect.left + rect.width / 2 + (Math.random() - 0.5) * 140,
+                        rect.top + 80,
+                        false
+                    );
+                }, i * 60);
+            }
+
+            // Lluvia suave continua mientras la carta está abierta
+            intervaloAbierto = setInterval(() => {
+                const x = Math.random() * window.innerWidth;
+                const y = window.innerHeight + 10;
+                crearParticula(x, y, true);
+            }, 450);
+
+        } else {
+            textoGuia.textContent = 'Toca el sello de corazón para abrir';
+            clearInterval(intervaloAbierto);
+        }
+    });
+</script>
+
+</body>
+</html>
