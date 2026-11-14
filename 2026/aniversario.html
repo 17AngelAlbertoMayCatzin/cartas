@@ -15,7 +15,7 @@
         }
 
         * {
-            -webkit-tap-highlight-color: transparent; /* Elimina el recuadro azul al tocar en Android/iOS */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -24,7 +24,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            min-height: 100dvh; /* Altura exacta del viewport en móviles */
+            min-height: 100dvh;
             margin: 0;
             background: radial-gradient(circle, #fff5f5 0%, #f7d6da 100%);
             font-family: 'Lora', serif;
@@ -66,12 +66,12 @@
             50% { box-shadow: 0 8px 35px rgba(196, 43, 71, 0.35), 0 4px 15px rgba(0, 0, 0, 0.12); }
         }
 
-        /* Botón flotante de música en esquina inferior derecha para no tapar la carta */
+        /* Botón flotante de música en esquina inferior derecha */
         .btn-musica {
             position: fixed;
             bottom: 16px;
             right: 16px;
-            z-index: 20;
+            z-index: 25;
             background: #fffaf0;
             border: 1px solid #d4af37;
             color: #821428;
@@ -88,6 +88,168 @@
             transform: scale(0.95);
         }
 
+        /* --- FIGURA DE JACK SKELLINGTON --- */
+        .jack-contenedor {
+            position: fixed;
+            bottom: 8px;
+            left: 0;
+            width: 75px;
+            height: 135px;
+            z-index: 20;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.6s ease, transform 0.8s ease-in-out;
+        }
+
+        .jack-contenedor.visible {
+            opacity: 1;
+        }
+
+        /* Estado 1: Caminando y cantando de lado a lado */
+        .jack-contenedor.cantando {
+            animation: caminarPantalla 16s infinite ease-in-out;
+        }
+
+        @keyframes caminarPantalla {
+            0% {
+                transform: translateX(12px) scaleX(1);
+            }
+            47% {
+                transform: translateX(calc(100vw - 88px)) scaleX(1);
+            }
+            50% {
+                transform: translateX(calc(100vw - 88px)) scaleX(-1);
+            }
+            97% {
+                transform: translateX(12px) scaleX(-1);
+            }
+            100% {
+                transform: translateX(12px) scaleX(1);
+            }
+        }
+
+        /* Estado 2: Detenido en el centro haciendo un corazón (1:35 a 1:55) */
+        .jack-contenedor.haciendo-corazon {
+            animation: none;
+            transform: translateX(calc(50vw - 37.5px)) scaleX(1);
+        }
+
+        /* Alternar visibilidad entre pose de micrófono y pose de corazón */
+        .pose-corazon {
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .pose-microfono {
+            opacity: 1;
+            transition: opacity 0.35s ease;
+        }
+
+        .jack-contenedor.haciendo-corazon .pose-microfono {
+            opacity: 0;
+        }
+
+        .jack-contenedor.haciendo-corazon .pose-corazon {
+            opacity: 1;
+        }
+
+        /* Latido del corazón que forma con sus manos */
+        .jack-contenedor.haciendo-corazon .corazon-manos {
+            animation: latidoCorazonManos 0.9s infinite ease-in-out;
+            transform-origin: 57px 72px;
+        }
+
+        @keyframes latidoCorazonManos {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.22); }
+        }
+
+        /* Movimiento de pasos (solo cuando camina) */
+        .jack-contenedor.cantando .jack-pierna-izq {
+            animation: pasoIzq 0.7s infinite alternate ease-in-out;
+            transform-origin: 43px 88px;
+        }
+
+        .jack-contenedor.cantando .jack-pierna-der {
+            animation: pasoDer 0.7s infinite alternate ease-in-out;
+            transform-origin: 57px 88px;
+        }
+
+        .jack-contenedor.cantando .jack-cuerpo-completo {
+            animation: reboteCaminar 0.35s infinite alternate ease-in-out;
+        }
+
+        @keyframes pasoIzq {
+            0% { transform: rotate(-22deg); }
+            100% { transform: rotate(22deg); }
+        }
+
+        @keyframes pasoDer {
+            0% { transform: rotate(22deg); }
+            100% { transform: rotate(-22deg); }
+        }
+
+        @keyframes reboteCaminar {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-3px); }
+        }
+
+        /* Animación de cabeza y mandíbula al cantar */
+        .jack-contenedor.cantando .jack-cabeza {
+            animation: balanceoCanto 1.4s infinite ease-in-out;
+            transform-origin: 50px 52px;
+        }
+
+        .jack-contenedor.cantando .jack-mandibula {
+            animation: moverBoca 0.45s infinite alternate ease-in-out;
+            transform-origin: 50px 44px;
+        }
+
+        /* Inclinación tierna de cabeza cuando hace el corazón */
+        .jack-contenedor.haciendo-corazon .jack-cabeza {
+            transform: rotate(4deg);
+            transform-origin: 50px 52px;
+            transition: transform 0.5s ease;
+        }
+
+        @keyframes balanceoCanto {
+            0%, 100% { transform: rotate(-4deg); }
+            50% { transform: rotate(6deg); }
+        }
+
+        @keyframes moverBoca {
+            0% { transform: translateY(0) scaleY(1); }
+            100% { transform: translateY(3.5px) scaleY(1.1); }
+        }
+
+        .nota-musical {
+            position: absolute;
+            color: #821428;
+            font-size: 16px;
+            font-weight: bold;
+            opacity: 0;
+            text-shadow: 0 1px 3px rgba(212, 175, 55, 0.6);
+        }
+
+        .jack-contenedor.cantando .nota-1 {
+            animation: flotarNota 2.2s infinite ease-out;
+            left: 60px;
+            top: 15px;
+        }
+
+        .jack-contenedor.cantando .nota-2 {
+            animation: flotarNota 2.2s infinite ease-out 1.1s;
+            left: 68px;
+            top: 28px;
+        }
+
+        @keyframes flotarNota {
+            0% { opacity: 0; transform: translate(0, 0) scale(0.6) rotate(-10deg); }
+            30% { opacity: 1; }
+            100% { opacity: 0; transform: translate(22px, -45px) scale(1.15) rotate(15deg); }
+        }
+
+        /* --- SOBRE Y CARTA --- */
         .contenedor-sobre {
             position: relative;
             width: 320px;
@@ -109,7 +271,6 @@
             animation: latido 0.8s infinite ease-in-out;
         }
 
-        /* La carta interior */
         .carta {
             position: absolute;
             bottom: 12px;
@@ -209,7 +370,7 @@
             object-fit: cover;
             display: block;
             border-radius: 2px;
-            pointer-events: none; /* Evita selección accidental al tocar la imagen */
+            pointer-events: none;
         }
 
         .polaroid span {
@@ -377,8 +538,6 @@
         }
 
         /* --- ESTADOS CUANDO EL SOBRE ESTÁ ABIERTO --- */
-
-        /* Baja suavemente el sobre para dejar espacio arriba en pantallas de celular */
         .contenedor-sobre.abierto {
             transform: translateY(115px);
         }
@@ -399,7 +558,6 @@
             z-index: 1;
         }
 
-        /* La carta sube lo justo para quedar centrada sin tocar la barra del navegador */
         .contenedor-sobre.abierto .carta {
             transform: translateY(-135px) scale(1.04);
             height: 360px;
@@ -430,6 +588,98 @@
 <!-- Audio y botón de control -->
 <audio id="musica" src="audio/cien-anos.mp3" preload="auto" loop></audio>
 <button id="btnMusica" class="btn-musica" aria-label="Controlar música">🎵 Música: Off</button>
+
+<!-- Figura animada de Jack Skellington -->
+<div class="jack-contenedor" id="jackCantando">
+    <span class="nota-musical nota-1">♪</span>
+    <span class="nota-musical nota-2">♫</span>
+    <svg viewBox="0 0 115 165" width="100%" height="100%">
+        <g class="jack-cuerpo-completo">
+            <!-- Pierna izquierda -->
+            <g class="jack-pierna-izq">
+                <line x1="43" y1="88" x2="41" y2="152" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round" />
+                <line x1="43" y1="88" x2="41" y2="152" stroke="#ffffff" stroke-width="0.9" stroke-dasharray="3,3" />
+                <path d="M38,152 L50,152 Q53,156 48,158 L37,158 Z" fill="#111" />
+            </g>
+
+            <!-- Pierna derecha -->
+            <g class="jack-pierna-der">
+                <line x1="57" y1="88" x2="59" y2="152" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round" />
+                <line x1="57" y1="88" x2="59" y2="152" stroke="#ffffff" stroke-width="0.9" stroke-dasharray="3,3" />
+                <path d="M54,152 L66,152 Q69,156 64,158 L53,158 Z" fill="#111" />
+            </g>
+
+            <!-- Saco / Frac con rayas blancas -->
+            <path d="M33,62 L67,62 L64,92 L53,88 L50,94 L47,88 L36,92 Z" fill="#1a1a1a" />
+            <line x1="42" y1="63" x2="40" y2="90" stroke="#ffffff" stroke-width="1" stroke-dasharray="3,2" />
+            <line x1="50" y1="63" x2="50" y2="92" stroke="#ffffff" stroke-width="1" stroke-dasharray="3,2" />
+            <line x1="58" y1="63" x2="60" y2="90" stroke="#ffffff" stroke-width="1" stroke-dasharray="3,2" />
+
+            <!-- Cuello blanco y corbatín de murciélago -->
+            <polygon points="43,62 50,72 57,62" fill="#fffaf0" />
+            <path d="M50,65 C44,60 36,61 34,66 C38,66 40,69 42,67 C45,69 47,67 50,68 C53,67 55,69 58,67 C60,69 62,66 66,66 C64,61 56,60 50,65 Z" fill="#111" stroke="#fff" stroke-width="0.6"/>
+            <circle cx="50" cy="66" r="2" fill="#111" />
+
+            <!-- Grupo de la cabeza animada -->
+            <g class="jack-cabeza">
+                <path d="M27,34 C27,13 73,13 73,34 C73,41 67,46 61,47 L39,47 C33,46 27,41 27,34 Z" fill="#fffaf0" stroke="#222" stroke-width="1.5"/>
+
+                <!-- Mandíbula -->
+                <g class="jack-mandibula">
+                    <path d="M37,45 Q50,58 63,45 Q50,51 37,45 Z" fill="#1a1a1a" />
+                    <path d="M37,45 Q50,59 63,45 C61,54 55,57 50,57 C45,57 39,54 37,45 Z" fill="#fffaf0" stroke="#222" stroke-width="1.5"/>
+                    <line x1="37" y1="44" x2="37" y2="48" stroke="#222" stroke-width="1.1" />
+                    <line x1="43" y1="47" x2="43" y2="51" stroke="#222" stroke-width="1.1" />
+                    <line x1="50" y1="48" x2="50" y2="52" stroke="#222" stroke-width="1.1" />
+                    <line x1="57" y1="47" x2="57" y2="51" stroke="#222" stroke-width="1.1" />
+                    <line x1="63" y1="44" x2="63" y2="48" stroke="#222" stroke-width="1.1" />
+                </g>
+
+                <!-- Ojos grandes y expresivos -->
+                <ellipse cx="40" cy="31" rx="7" ry="8.5" transform="rotate(-12 40 31)" fill="#1a1a1a" />
+                <ellipse cx="60" cy="31" rx="7" ry="8.5" transform="rotate(12 60 31)" fill="#1a1a1a" />
+                <circle cx="38" cy="28" r="1.7" fill="#ffffff" opacity="0.85" />
+                <circle cx="58" cy="28" r="1.7" fill="#ffffff" opacity="0.85" />
+
+                <!-- Fosas nasales -->
+                <path d="M47,40 Q48,37 49,40" stroke="#1a1a1a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+                <path d="M51,40 Q52,37 53,40" stroke="#1a1a1a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            </g>
+
+            <!-- POSE 1: Brazo sosteniendo el micrófono (visible al cantar) -->
+            <g class="pose-microfono">
+                <path d="M64,66 L82,78 L77,60" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M64,66 L82,78 L77,60" fill="none" stroke="#ffffff" stroke-width="0.9" stroke-dasharray="3,2" />
+
+                <g transform="translate(74, 48) rotate(-18)">
+                    <rect x="0" y="6" width="4.5" height="15" rx="2" fill="#2c2c2c" stroke="#111" stroke-width="0.8" />
+                    <rect x="-2" y="-3" width="8.5" height="10" rx="4" fill="#d4d4d4" stroke="#333" stroke-width="1" />
+                    <line x1="-1.5" y1="0" x2="6" y2="0" stroke="#555" stroke-width="0.9" />
+                    <line x1="-1.5" y1="3" x2="6" y2="3" stroke="#555" stroke-width="0.9" />
+                    <path d="M-1,11 L5.5,11 M-1,14 L5.5,14 M-1,17 L5.5,17" stroke="#fffaf0" stroke-width="2" stroke-linecap="round" />
+                </g>
+            </g>
+
+            <!-- POSE 2: Ambos brazos formando un corazón con las manos (1:35 a 1:55) -->
+            <g class="pose-corazon">
+                <!-- Brazo izquierdo formando arco -->
+                <path d="M35,66 Q24,74 49,68" fill="none" stroke="#1a1a1a" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M35,66 Q24,74 49,68" fill="none" stroke="#ffffff" stroke-width="0.8" stroke-dasharray="3,2" />
+
+                <!-- Brazo derecho formando arco -->
+                <path d="M65,66 Q84,74 65,68" fill="none" stroke="#1a1a1a" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M65,66 Q84,74 65,68" fill="none" stroke="#ffffff" stroke-width="0.8" stroke-dasharray="3,2" />
+
+                <!-- Manos huesudas formando el contorno de un corazón -->
+                <path d="M57,72 C53,66 46,68 48,74 C50,78 57,82 57,82" fill="none" stroke="#fffaf0" stroke-width="2.4" stroke-linecap="round" />
+                <path d="M57,72 C61,66 68,68 66,74 C64,78 57,82 57,82" fill="none" stroke="#fffaf0" stroke-width="2.4" stroke-linecap="round" />
+
+                <!-- Corazón rojo latiendo en el centro de sus manos -->
+                <path class="corazon-manos" d="M57,79 C57,79 50,74 50,70.5 C50,68.5 52,67 54,67 C55.5,67 56.6,68 57,69 C57.4,68 58.5,67 60,67 C62,67 64,68.5 64,70.5 C64,74 57,79 57,79 Z" fill="#e62e4d" stroke="#fffaf0" stroke-width="0.7" />
+            </g>
+        </g>
+    </svg>
+</div>
 
 <div class="contenedor-sobre" id="sobre">
     <div class="solapa"></div>
@@ -514,12 +764,42 @@
     const contador = document.getElementById('contador');
     const musica = document.getElementById('musica');
     const btnMusica = document.getElementById('btnMusica');
+    const jackCantando = document.getElementById('jackCantando');
 
     let intervaloHover = null;
     let intervaloAbierto = null;
     let audioIniciado = false;
 
-    // --- LÓGICA DE MÚSICA ---
+    // Función centralizada para actualizar la animación de Jack según el segundo exacto
+    // 1:35 = 95 segundos | 1:55 = 115 segundos
+    function actualizarEstadoJack() {
+        const t = musica.currentTime;
+        const abierto = sobre.classList.contains('abierto');
+
+        if (!abierto || t < 20) {
+            jackCantando.classList.remove('visible', 'cantando', 'haciendo-corazon');
+            return;
+        }
+
+        jackCantando.classList.add('visible');
+
+        if (t >= 95 && t <= 115) {
+            // Del 1:35 al 1:55: se detiene en el centro, deja de cantar y hace un corazón
+            jackCantando.classList.remove('cantando');
+            jackCantando.classList.add('haciendo-corazon');
+        } else {
+            // Antes del 1:35 y después del 1:55: camina y canta (si la música no está pausada)
+            jackCantando.classList.remove('haciendo-corazon');
+            if (!musica.paused) {
+                jackCantando.classList.add('cantando');
+            } else {
+                jackCantando.classList.remove('cantando');
+            }
+        }
+    }
+
+    musica.addEventListener('timeupdate', actualizarEstadoJack);
+
     btnMusica.addEventListener('click', (e) => {
         e.stopPropagation();
         if (musica.paused) {
@@ -529,6 +809,7 @@
             musica.pause();
             btnMusica.textContent = '🎵 Música: Off';
         }
+        actualizarEstadoJack();
     });
 
     // --- LÓGICA DEL CARRUSEL ---
@@ -595,7 +876,6 @@
     carta.addEventListener('touchstart', () => { seMovio = false; });
 
     sobre.addEventListener('click', (e) => {
-        // Evita que tocar las fotos o el carrusel cierre la carta accidentalmente
         if (seMovio || e.target.closest('.contenedor-carrusel')) return;
 
         sobre.classList.toggle('abierto');
@@ -604,12 +884,14 @@
         if (estaAbierto) {
             clearInterval(intervaloHover);
             textoGuia.textContent = 'Toca el texto de la carta para guardarla';
+            actualizarEstadoJack();
 
             if (!audioIniciado) {
                 audioIniciado = true;
                 musica.volume = 0.05;
                 musica.play().then(() => {
                     btnMusica.textContent = '🎵 Música: On';
+                    actualizarEstadoJack();
                     const fadeAudio = setInterval(() => {
                         if (musica.volume < 0.5) {
                             musica.volume = Math.min(0.5, musica.volume + 0.05);
@@ -639,6 +921,7 @@
 
         } else {
             textoGuia.textContent = 'Toca el sello de corazón para abrir';
+            actualizarEstadoJack();
             clearInterval(intervaloAbierto);
         }
     });
